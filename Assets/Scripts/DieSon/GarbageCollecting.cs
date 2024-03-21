@@ -46,7 +46,7 @@ public class GarbageCollecting : MonoBehaviour
         }
         IEnumerator DestroyGarbage()
         {
-            yield return new WaitForSeconds(0.75f);
+            yield return new WaitForSeconds(0.5f);
             collectedGarbageCount++;
             temizlikBar.value = collectedGarbageCount;
             Destroy(other.gameObject);
