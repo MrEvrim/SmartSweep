@@ -28,6 +28,9 @@ public class CapsuleColliderHandler : MonoBehaviour
     {
         if (other.CompareTag("DieSon"))
         {
+            mainCamera.GetComponent<Waypoint>().enabled = true;
+
+
             other.transform.position = teleportDestination.transform.position;
             other.transform.rotation = teleportDestination.transform.rotation;
 

@@ -55,14 +55,14 @@ public class ToggContoroller : MonoBehaviour
         if (Input.GetKey("space"))
         {
             MoveSpeed = 0;
-            MaxSpeed -= 0.8f;
+            MaxSpeed -= 0.6f;
             Drag = 1f;
             drift.mute = false;
         }
         else
         {
-            MaxSpeed = 95;
-            MoveSpeed = 30;
+            MaxSpeed = 48;
+            MoveSpeed = 20;
             Drag = 0.97f;
             drift.mute = true;
         }
