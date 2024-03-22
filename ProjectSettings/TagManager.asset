@@ -8,6 +8,7 @@ TagManager:
   - Togg
   - DieSon
   - Drone
+  - Pickupable
   layers:
   - Default
   - TransparentFX
