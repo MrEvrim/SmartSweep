@@ -10,7 +10,7 @@ public class Timer : MonoBehaviour
     public TMP_Text gorevTxt;
     public GameObject togg;
     //Toplam geri sayım süresi (2.5 dakika)
-    private float remainingTime = 15f;
+    private float remainingTime = 150f;
 
     void Update()
     {
@@ -27,7 +27,7 @@ public class Timer : MonoBehaviour
         if (remainingTime <= 60f)
             timerTxt.color = Color.red; 
         //Eğer süre biterse
-        if (seconds == 0)
+        if (remainingTime == 0)
         {
             gorevTxt.text = "Başaramadın Tekrar Dene.";
             gorevTxt.color = Color.red;
