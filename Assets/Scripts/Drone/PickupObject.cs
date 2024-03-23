@@ -58,6 +58,6 @@ public class PickupObject : MonoBehaviour
         currentPickup.GetComponent<Rigidbody>().isKinematic = false;
         currentPickup.transform.SetParent(null);
         currentPickup = null;
-        bilgiTxt.text = "";
+        bilgiTxt.text = "Erzak Kolisini almak için kolinin üstüne gel";
     }
 }

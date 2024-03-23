@@ -1,110 +1,77 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DroneCont : MonoBehaviour
 {
-    Rigidbody rb;
-    float udAxis, fbAxis, rlAxis;
-    float fbAngle = 0, rlAngle = 0;
-    [SerializeField]
-    float speed = 1.3f, angle = 25;
-    bool isOnGround = false;
-    private void Start()
+    public float moveSpeed = 0; 
+    public float riseSpeed = 3f; 
+    public float descendSpeed = 2f; 
+    public float rotationSpeed = 100f; 
+    public float maxRiseSpeed = 6f; 
+    public float maxDescendSpeed = 4f; 
+    public float maxAltitude = 20f; 
+    public float maxMoveSpeed = 25f; 
+    public float slowDownRate = 1f;
+
+    private Rigidbody rb;
+
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; 
     }
-    private void Update()
+
+    void Update()
     {
-        Controlls();
-        transform.localEulerAngles = Vector3.back * rlAngle + Vector3.right * fbAngle;
-    }
-    private void FixedUpdate()
-    {
-        rb.AddRelativeForce(rlAxis, udAxis, fbAxis);
-    }
-    void Controlls()
-    {
+        if (Input.GetKey(KeyCode.S))
+        {
+            moveSpeed -= slowDownRate * Time.deltaTime;
+        }
+
+        // Drone'u ileri ve geri hareket ettirme
+        float forwardInput = Input.GetAxis("Vertical");
+        moveSpeed += forwardInput * Time.deltaTime; 
+        moveSpeed = Mathf.Clamp(moveSpeed, -maxMoveSpeed, maxMoveSpeed); 
+        Vector3 moveDirection = transform.forward * moveSpeed * Time.deltaTime;
+        rb.MovePosition(rb.position + moveDirection);
+
+        // Drone'u sağa ve sola döndürme
+        float turnInput = Input.GetAxis("Horizontal");
+        Quaternion turnRotation = Quaternion.Euler(0f, turnInput * rotationSpeed * Time.deltaTime, 0f);
+        rb.MoveRotation(rb.rotation * turnRotation);
+
+        // Q tuşuna basıldığında yukarı hareket
         if (Input.GetKey(KeyCode.Q))
         {
-            udAxis = 10 * speed;
-            isOnGround = false;
-        }
-        else if (Input.GetKey(KeyCode.E))
-        {
-            udAxis = 8;
-            isOnGround = false;
-        }
-        else
-            udAxis = 9.81f;
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            fbAngle = Mathf.Lerp(fbAngle, angle, Time.deltaTime);
-            fbAxis = speed;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            fbAngle = Mathf.Lerp(fbAngle, -angle, Time.deltaTime);
-            fbAxis = -speed;
+            if (riseSpeed < maxRiseSpeed)
+            {
+                riseSpeed += Time.deltaTime;
+            }
+            rb.MovePosition(rb.position + Vector3.up * riseSpeed * Time.deltaTime);
         }
         else
         {
-            fbAngle = Mathf.Lerp(fbAngle, 0, Time.deltaTime);
-            fbAxis = 0;
+            // Yükselme hızını sıfırla istersen burada aşağı indirebilirsin.
+            riseSpeed = 0f;
         }
 
-        if (Input.GetKey(KeyCode.D))
+
+        if (Input.GetKey(KeyCode.E))
         {
-            rlAngle = Mathf.Lerp(rlAngle, angle, Time.deltaTime);
-            rlAxis = speed;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            rlAngle = Mathf.Lerp(rlAngle, -angle, Time.deltaTime);
-            rlAxis = -speed;
+            if (descendSpeed < maxDescendSpeed)
+            {
+                descendSpeed += Time.deltaTime;
+            }
+            rb.MovePosition(rb.position + Vector3.down * descendSpeed * Time.deltaTime);
         }
         else
         {
-            rlAngle = Mathf.Lerp(rlAngle, 0, Time.deltaTime);
-            rlAxis = 0;
+            // Alçalma hızını sıfırla same
+            descendSpeed = 0f;
         }
 
-        if ((Input.GetKey(KeyCode.W)) && (Input.GetKey(KeyCode.D)))
+        if (transform.position.y > maxAltitude)
         {
-            fbAngle = Mathf.Lerp(fbAngle, angle, Time.deltaTime);
-            rlAngle = Mathf.Lerp(rlAngle, angle, Time.deltaTime);
-            fbAxis = 0.5f * speed;
-            rlAxis = 0.5f * speed;
+            transform.position = new Vector3(transform.position.x, maxAltitude, transform.position.z);
         }
-
-        if ((Input.GetKey(KeyCode.W)) && (Input.GetKey(KeyCode.A)))
-        {
-            fbAngle = Mathf.Lerp(fbAngle, angle, Time.deltaTime);
-            rlAngle = Mathf.Lerp(rlAngle, -angle, Time.deltaTime);
-            fbAxis = 0.5f * speed;
-            rlAxis = 0.5f * speed;
-        }
-        if ((Input.GetKey(KeyCode.S)) && (Input.GetKey(KeyCode.D)))
-        {
-            fbAngle = Mathf.Lerp(fbAngle, -angle, Time.deltaTime);
-            rlAngle = Mathf.Lerp(rlAngle, angle, Time.deltaTime);
-            fbAxis = -0.5f * speed;
-            rlAxis = -0.5f * speed;
-        }
-        if ((Input.GetKey(KeyCode.S)) && (Input.GetKey(KeyCode.D)))
-        {
-            fbAngle = Mathf.Lerp(fbAngle, -angle, Time.deltaTime);
-            rlAngle = Mathf.Lerp(rlAngle, -angle, Time.deltaTime);
-            fbAxis = -0.5f * speed;
-            rlAxis = -0.5f * speed;
-        }
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "ground")
-            isOnGround = true;
     }
 }
