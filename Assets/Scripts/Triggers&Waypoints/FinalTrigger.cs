@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FinalTrigger : MonoBehaviour
@@ -9,22 +10,19 @@ public class FinalTrigger : MonoBehaviour
     public TMP_Text gorevTxt;
     public GameObject alkıscilar;
     public TMP_Text timer;
-    public GameObject panelObject; // Canvas içindeki panel objesi
-    public float fadeDuration = 3f; // Saydamlığın azalma süresi (saniye)
+    public GameObject panelObject;
+    public float fadeDuration = 3f;
+    public string nextSceneName = "CityDay"; // Name of the scene to load next
 
-    private CanvasGroup panelCanvasGroup; // Panelin CanvasGroup bileşeni
-    private Image panelImage; // Panel içindeki Image bileşeni
+    private CanvasGroup panelCanvasGroup;
+    private Image panelImage;
 
     private void Start()
     {
-        // Panelin CanvasGroup bileşenini al
         panelCanvasGroup = panelObject.GetComponent<CanvasGroup>();
-        // Panelin saydamlığını başlangıçta 0 yaparak gizle
         panelCanvasGroup.alpha = 0f;
 
-        // Panel içindeki Image bileşenini al
         panelImage = panelObject.GetComponentInChildren<Image>();
-        // Panelin içindeki Image bileşeninin saydamlığını da başlangıçta 0 yaparak gizle
         Color tempColor = panelImage.color;
         tempColor.a = 0f;
         panelImage.color = tempColor;
@@ -34,18 +32,14 @@ public class FinalTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Togg"))
         {
-            // Timer'ı ve gorevTxt'yi devre dışı bırak
             timer.enabled = false;
             gorevTxt.text = "Tebrikler Sivillerin HAYATINI KURTARDIN !!!";
 
-            // Togg objesinin ToggContoroller ve AudioSource bileşenlerini devre dışı bırak
             toggObject.GetComponent<ToggContoroller>().enabled = false;
             toggObject.GetComponent<AudioSource>().enabled = false;
 
-            // Alkıscıları etkinleştir
             alkıscilar.SetActive(true);
 
-            // Panelin saydamlığını azaltarak görünür hale getir
             StartCoroutine(FadeInPanel());
         }
     }
@@ -55,23 +49,23 @@ public class FinalTrigger : MonoBehaviour
         float elapsedTime = 0f;
         while (elapsedTime < fadeDuration)
         {
-            // Zamanı güncelle
             elapsedTime += Time.deltaTime;
-
-            // Panelin saydamlığını azalt
             panelCanvasGroup.alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
 
-            // Panel içindeki Image bileşeninin saydamlığını güncelle
             Color tempColor = panelImage.color;
             tempColor.a = panelCanvasGroup.alpha;
             panelImage.color = tempColor;
 
             yield return null;
         }
-        // Panel tamamen görünür hale geldiğinde işlemi bitir
+
         panelCanvasGroup.alpha = 1f;
         Color finalColor = panelImage.color;
         finalColor.a = 1f;
         panelImage.color = finalColor;
+
+        // Load the next scene after fade-in completes
+        yield return new WaitForSeconds(3f); // Wait for 3 seconds
+        SceneManager.LoadScene(nextSceneName); // Load the next scene
     }
 }

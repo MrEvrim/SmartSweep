@@ -10,7 +10,7 @@ public class Timer : MonoBehaviour
     public TMP_Text gorevTxt;
     public GameObject togg;
     //Toplam geri sayım süresi (2.5 dakika)
-    private float remainingTime = 150f;
+    private float remainingTime = 240f;
 
     void Update()
     {
