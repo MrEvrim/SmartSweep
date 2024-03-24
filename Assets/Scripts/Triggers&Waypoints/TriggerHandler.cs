@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +33,7 @@ public class CapsuleColliderHandler : MonoBehaviour
 
 
             other.transform.position = teleportDestination.transform.position;
+            //other.transform.DOMove(teleportDestination.transform.position, 2f, false);
             other.transform.rotation = teleportDestination.transform.rotation;
 
             BoxCollider boxCollider = other.GetComponent<BoxCollider>();

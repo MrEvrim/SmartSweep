@@ -8,13 +8,14 @@ using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenu, howToPlayPanel;
+    public GameObject pauseMenu, howToPlayPanel, evPanel, toggPanel, dronePanel;
     public TMP_Text objectiveText;
     public Button evButton, toggButton, droneButton;
     // Start is called before the first frame update
     void Start()
     {
         objectiveText.text = "Amaç: Baþlangýç katýndaki çöpleri topladýktan sonra yere düþen USB belleði al ve alt kata in. Anahtarý al ve dýþarý çýk.";
+        evPanel.SetActive(true);
     }
 
     // Update is called once per frame
@@ -65,6 +66,9 @@ public class PauseMenu : MonoBehaviour
         evButton.interactable = false;
         toggButton.interactable = true;
         droneButton.interactable = true;
+        evPanel.SetActive(true);
+        toggPanel.SetActive(false);
+        dronePanel.SetActive(false);
     }
     public void TOGGBolumu()
     {
@@ -72,6 +76,10 @@ public class PauseMenu : MonoBehaviour
         evButton.interactable = true;
         toggButton.interactable = false;
         droneButton.interactable = true;
+        evPanel.SetActive(false);
+        toggPanel.SetActive(true);
+        dronePanel.SetActive(false);
+
     }
     public void DroneBolumu()
     {
@@ -79,5 +87,9 @@ public class PauseMenu : MonoBehaviour
         evButton.interactable = true;
         toggButton.interactable = true;
         droneButton.interactable = false;
+        evPanel.SetActive(false);
+        toggPanel.SetActive(false);
+        dronePanel.SetActive(true);
+
     }
 }

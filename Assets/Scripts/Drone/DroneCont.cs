@@ -13,11 +13,14 @@ public class DroneCont : MonoBehaviour
     public float slowDownRate = 1f;
 
     private Rigidbody rb;
+    private AudioSource audioSource;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true; 
+        audioSource = GetComponent<AudioSource>();
+        audioSource.enabled = true;
     }
 
     void Update()
